@@ -11,19 +11,12 @@ spi.max_speed_hz = 1350000
 
 
 def read_channel(channel):
-    """
-    Read data from MCP3008 ADC channel (0-7)
-    Returns integer value 0-1023
-    """
     adc = spi.xfer2([1, (8 + channel) << 4, 0])
     data = ((adc[1] & 3) << 8) + adc[2]
     return data
 
 
 def convert_to_voltage(data, vref=3.3):
-    """
-    Convert 10-bit ADC value to voltage
-    """
     voltage = (data * vref) / 1023
     return voltage
 
