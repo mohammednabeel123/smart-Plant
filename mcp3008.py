@@ -11,9 +11,10 @@ spi.max_speed_hz = 1350000   # this is always on the datasheet
 
 
 def channel_readings(channel):
-    adc = spi.xfer2([1, (8 + channel) << 4, 0])
+    adc = spi.xfer2([1, (8 + channel) << 4, 0]) #reading channel
     print(adc)
     data = ((adc[1] & 3) << 8) + adc[2]
+    print(data)
     return data
 
 
