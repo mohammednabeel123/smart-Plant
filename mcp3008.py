@@ -3,6 +3,11 @@ print("Analog to Digital convertor")
 
 import spidev   
 import time     
+from gpiozero import LED
+LED1 = LED(2)
+LED2 = LED(3)
+
+
 
 
 spi = spidev.SpiDev()       
@@ -21,6 +26,16 @@ def channel_readings(channel):
 def convert_to_voltage(data, vref=3.3):
     voltage = (data * vref) / 1023
     return voltage
+    if voltage > 550:
+        LED1.on()
+        LED2.OFF()
+    elif voltage < 550:
+        LED1.off()
+        LED2.on()
+    else:
+        LED1.ON()
+        LED2.off()
+    
 
 
 try:
