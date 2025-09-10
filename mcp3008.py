@@ -10,7 +10,7 @@ LED2 = LED(3)
 leds = [LED1,LED2]
 for l in leds:
     l.off()
-    
+
 spi = spidev.SpiDev()       
 spi.open(0, 0)              
 spi.max_speed_hz = 1350000   # this is always on the datasheet
@@ -29,7 +29,7 @@ def convert_to_voltage(data, vref=3.3):
     return voltage
     if voltage > 550:
         LED1.on()
-        LED2.OFF()
+        LED2.off()
     elif voltage < 550:
         LED1.off()
         LED2.on()
