@@ -8,17 +8,19 @@
 <style>
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #e0f7fa, #e8f5e9);
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     margin: 0; padding: 0;
     text-align: center;
+    color: #fff;
 }
 header {
-    background: #2e7d32;
+    background: linear-gradient(90deg, #ff8a00, #e52e71);
     color: white;
     padding: 25px 0;
-    font-size: 2.2em;
+    font-size: 2.5em;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
 }
 .container {
     display: flex;
@@ -28,39 +30,44 @@ header {
     gap: 25px;
 }
 .card {
-    background: linear-gradient(145deg, #ffffff, #f1f5f9);
-    border-radius: 16px;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    background: linear-gradient(145deg, #1f4037, #99f2c8);
+    border-radius: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
     padding: 25px;
     width: 220px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+    transform: translateY(-8px);
+    box-shadow: 0 16px 35px rgba(0,0,0,0.6);
 }
 .card h2 {
     margin: 10px 0;
     font-size: 1.4em;
-    color: #2e7d32;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    color: #fff;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
 }
 .value {
-    font-size: 2.3em;
+    font-size: 2.5em;
     font-weight: bold;
     margin-top: 10px;
+    color: #00ffcc;
+    text-shadow: 0 0 10px rgba(0,255,204,0.7);
+    transition: all 0.5s ease;
 }
-.pump-on { color: #0f9d58; font-weight: bold; }
-.pump-off { color: #d32f2f; font-weight: bold; }
+.pump-on { color: #00ff00; text-shadow: 0 0 15px rgba(0,255,0,0.7); }
+.pump-off { color: #ff1744; text-shadow: 0 0 15px rgba(255,23,68,0.7); }
 footer {
     margin-top: 40px;
     padding: 20px;
-    background: #2e7d32;
+    background: linear-gradient(90deg, #ff8a00, #e52e71);
     color: white;
     font-size: 1em;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
 }
 </style>
 </head>
@@ -101,7 +108,6 @@ async function updateData() {
     pumpEl.innerText = data.pump;
     pumpEl.className = "value " + (data.pump === "ON" ? "pump-on" : "pump-off");
 }
-// Update every 2 seconds
 setInterval(updateData, 2000);
 updateData();
 </script>
