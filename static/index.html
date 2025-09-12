@@ -1,121 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌱 Smart Plant Dashboard</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-
-    header {
-      background: #2e7d32;
-      color: white;
-      padding: 20px;
-      font-size: 2em;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 20px;
-      gap: 20px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      padding: 20px;
-      width: 220px;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-    }
-
-    .card h2 {
-      margin: 10px 0;
-      font-size: 1.3em;
-      color: #333;
-    }
-
-    .value {
-      font-size: 2em;
-      font-weight: bold;
-      color: #2e7d32;
-    }
-
-    .pump-on {
-      color: green;
-      font-weight: bold;
-    }
-
-    .pump-off {
-      color: red;
-      font-weight: bold;
-    }
-
-    footer {
-      margin-top: 30px;
-      padding: 15px;
-      background: #2e7d32;
-      color: white;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌱 Smart Plant Dashboard</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #e8f5e9);
+    margin: 0; padding: 0;
+    text-align: center;
+}
+header {
+    background: #2e7d32;
+    color: white;
+    padding: 25px 0;
+    font-size: 2.2em;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 30px;
+    gap: 25px;
+}
+.card {
+    background: linear-gradient(145deg, #ffffff, #f1f5f9);
+    border-radius: 16px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    padding: 25px;
+    width: 220px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+}
+.card h2 {
+    margin: 10px 0;
+    font-size: 1.4em;
+    color: #2e7d32;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.value {
+    font-size: 2.3em;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.pump-on { color: #0f9d58; font-weight: bold; }
+.pump-off { color: #d32f2f; font-weight: bold; }
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    background: #2e7d32;
+    color: white;
+    font-size: 1em;
+}
+</style>
 </head>
 <body>
-  <header>🌱 Smart Environmet Dashboard</header>
+<header>🌱 Smart Environment Dashboard</header>
 
-  <div class="container">
+<div class="container">
     <div class="card">
-      <h2>Light Level</h2>
-      <div id="ldr" class="value">--</div>
+        <h2><i class="fas fa-sun"></i> Light Level</h2>
+        <div id="ldr" class="value">--</div>
     </div>
-
     <div class="card">
-      <h2>Temperature</h2>
-      <div id="temp" class="value">-- °C</div>
+        <h2><i class="fas fa-thermometer-half"></i> Temperature</h2>
+        <div id="temp" class="value">-- °C</div>
     </div>
-
     <div class="card">
-      <h2>Humidity</h2>
-      <div id="humidity" class="value">-- %</div>
+        <h2><i class="fas fa-tint"></i> Humidity</h2>
+        <div id="humidity" class="value">-- %</div>
     </div>
-
     <div class="card">
-      <h2>Pump Status</h2>
-      <div id="pump" class="value pump-off">--</div>
+        <h2><i class="fas fa-water"></i> Pump Status</h2>
+        <div id="pump" class="value pump-off">--</div>
     </div>
-  </div>
+</div>
 
-  <footer>
-    Smart Plant IoT Project 🚀 | Raspberry Pi + Flask
-  </footer>
+<footer>Smart Plant IoT Project 🚀 | Raspberry Pi + Flask</footer>
 
-  <script>
-    async function updateData() {
-      const response = await fetch('/data');
-      const data = await response.json();
+<script>
+async function updateData() {
+    const response = await fetch('/data');
+    const data = await response.json();
 
-      document.getElementById('ldr').innerText = data.ldr;
-      document.getElementById('temp').innerText = data.temperature + " °C";
-      document.getElementById('humidity').innerText = data.humidity + " %";
+    document.getElementById('ldr').innerText = data.ldr;
+    document.getElementById('temp').innerText = data.temperature + " °C";
+    document.getElementById('humidity').innerText = data.humidity + " %";
 
-      const pumpEl = document.getElementById('pump');
-      pumpEl.innerText = data.pump;
-      pumpEl.className = "value " + (data.pump === "ON" ? "pump-on" : "pump-off");
-    }
-    setInterval(updateData, 2000);
-    updateData();
-  </script>
+    const pumpEl = document.getElementById('pump');
+    pumpEl.innerText = data.pump;
+    pumpEl.className = "value " + (data.pump === "ON" ? "pump-on" : "pump-off");
+}
+// Update every 2 seconds
+setInterval(updateData, 2000);
+updateData();
+</script>
 </body>
 </html>
