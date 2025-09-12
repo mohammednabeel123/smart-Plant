@@ -1,33 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Smart Plant Dashboard</title>
-    <style>
-        body { font-family: Arial; text-align:center; }
-        .sensor { font-size: 1.5em; margin: 10px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌱 Smart Plant Dashboard</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 20px;
+      font-size: 2em;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      padding: 20px;
+      width: 220px;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card h2 {
+      margin: 10px 0;
+      font-size: 1.3em;
+      color: #333;
+    }
+
+    .value {
+      font-size: 2em;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    .pump-on {
+      color: green;
+      font-weight: bold;
+    }
+
+    .pump-off {
+      color: red;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 15px;
+      background: #2e7d32;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-    <h1>Smart Plant Dashboard</h1>
-    <div class="sensor" id="ldr">Light Level: --</div>
-    <div class="sensor" id="temp">Temperature: --</div>
-    <div class="sensor" id="humidity">Humidity: --</div>
-    <div class="sensor" id="pump">Pump Status: --</div>
+  <header>🌱 Smart Plant Dashboard</header>
 
-    <script>
-        async function updateData() {
-            const response = await fetch('/data');
-            const data = await response.json();
-            
-            document.getElementById('ldr').innerText = "Light Level: " + data.ldr;
-            document.getElementById('temp').innerText = "Temperature: " + data.temperature + " °C";
-            document.getElementById('humidity').innerText = "Humidity: " + data.humidity + " %";
-            document.getElementById('pump').innerText = "Pump Status: " + data.pump;
-        }
+  <div class="container">
+    <div class="card">
+      <h2>Light Level</h2>
+      <div id="ldr" class="value">--</div>
+    </div>
 
-        // Update every 2 seconds
-        setInterval(updateData, 2000);
-        updateData(); // initial load
-    </script>
+    <div class="card">
+      <h2>Temperature</h2>
+      <div id="temp" class="value">-- °C</div>
+    </div>
+
+    <div class="card">
+      <h2>Humidity</h2>
+      <div id="humidity" class="value">-- %</div>
+    </div>
+
+    <div class="card">
+      <h2>Pump Status</h2>
+      <div id="pump" class="value pump-off">--</div>
+    </div>
+  </div>
+
+  <footer>
+    Smart Plant IoT Project 🚀 | Raspberry Pi + Flask
+  </footer>
+
+  <script>
+    async function updateData() {
+      const response = await fetch('/data');
+      const data = await response.json();
+
+      document.getElementById('ldr').innerText = data.ldr;
+      document.getElementById('temp').innerText = data.temperature + " °C";
+      document.getElementById('humidity').innerText = data.humidity + " %";
+
+      const pumpEl = document.getElementById('pump');
+      pumpEl.innerText = data.pump;
+      pumpEl.className = "value " + (data.pump === "ON" ? "pump-on" : "pump-off");
+    }
+
+    // Update every 2 seconds
+    setInterval(updateData, 2000);
+    updateData();
+  </script>
 </body>
 </html>
