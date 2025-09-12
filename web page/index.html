@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Plant Dashboard</title>
+    <style>
+        body { font-family: Arial; text-align:center; }
+        .sensor { font-size: 1.5em; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Smart Plant Dashboard</h1>
+    <div class="sensor" id="ldr">Light Level: --</div>
+    <div class="sensor" id="temp">Temperature: --</div>
+    <div class="sensor" id="humidity">Humidity: --</div>
+    <div class="sensor" id="pump">Pump Status: --</div>
+
+    <script>
+        async function updateData() {
+            const response = await fetch('/data');
+            const data = await response.json();
+            
+            document.getElementById('ldr').innerText = "Light Level: " + data.ldr;
+            document.getElementById('temp').innerText = "Temperature: " + data.temperature + " °C";
+            document.getElementById('humidity').innerText = "Humidity: " + data.humidity + " %";
+            document.getElementById('pump').innerText = "Pump Status: " + data.pump;
+        }
+
+        // Update every 2 seconds
+        setInterval(updateData, 2000);
+        updateData(); // initial load
+    </script>
+</body>
+</html>
