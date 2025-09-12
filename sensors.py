@@ -4,6 +4,7 @@ from flask import Flask, jsonify
 import adafruit_dht
 import board
 
+
 app = Flask(__name__)
 
 # Initialize DHT22 once

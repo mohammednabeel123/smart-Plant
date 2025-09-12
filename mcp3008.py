@@ -3,6 +3,7 @@ print("Analog to Digital convertor")
 import spidev
 import time
 from gpiozero import LED
+from flask import Flask, jsonify
 
 # Setup LEDs
 LED1 = LED(2)

@@ -73,7 +73,7 @@
   </style>
 </head>
 <body>
-  <header>🌱 Smart Plant Dashboard</header>
+  <header>🌱 Smart Environmet Dashboard</header>
 
   <div class="container">
     <div class="card">
@@ -114,8 +114,6 @@
       pumpEl.innerText = data.pump;
       pumpEl.className = "value " + (data.pump === "ON" ? "pump-on" : "pump-off");
     }
-
-    // Update every 2 seconds
     setInterval(updateData, 2000);
     updateData();
   </script>
