@@ -1,7 +1,5 @@
 print("I'm the sensors")
 
-import time
-import board
 import adafruit_dht
 
 sDHT_SENSOR = Adafruit_DHT.DHT22
