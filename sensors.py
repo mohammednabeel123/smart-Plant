@@ -1,24 +1,27 @@
 print("I'm the sensors")
 
-import time
+from flask import Flask
 import adafruit_dht
-import board  # Needed for pin definitions
+import board
 
-# Initialize DHT22 on GPIO4
+app = Flask(__name__)
+
+# Initialize DHT22 once
 dht_sensor = adafruit_dht.DHT22(board.D4)
 
-while True:
+@app.route("/")
+def DHT22sensor():
     try:
         temperature = dht_sensor.temperature
         humidity = dht_sensor.humidity
 
         if humidity is not None and temperature is not None:
-            print(f"Temp={temperature:.1f}°C  Humidity={humidity:.1f}%")
+            return f"<h1>🌱 Smart Plant Dashboard</h1><p>Temp={temperature:.1f}°C<br>Humidity={humidity:.1f}%</p>"
         else:
-            print("Sensor returned None values")
+            return "<p>Sensor returned None values</p>"
 
     except RuntimeError as e:
-        # DHT sensors are a bit finicky, they often throw errors — ignore and retry
-        print(f"Error reading sensor: {e}")
+        return f"<p>Error reading sensor: {e}</p>"
 
-    time.sleep(2)  # Wait before retrying
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
