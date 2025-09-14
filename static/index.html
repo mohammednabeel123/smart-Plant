@@ -3,92 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌱 Smart Plant Dashboard</title>
+<title>Smart Environment Monitor</title>
+<link rel="stylesheet" href="styles.css">
+<script src="scripts.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<style>
-body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    margin: 0; padding: 0;
-    text-align: center;
-    color: #fff;
-}
-header {
-    background: linear-gradient(90deg, #ff8a00, #e52e71);
-    color: white;
-    padding: 25px 0;
-    font-size: 2.5em;
-    font-weight: bold;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-}
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 30px;
-    gap: 25px;
-}
-.card {
-    background: linear-gradient(145deg, #1f4037, #99f2c8);
-    border-radius: 20px;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
-    padding: 25px;
-    width: 220px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-}
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 35px rgba(0,0,0,0.6);
-}
-.card h2 {
-    margin: 10px 0;
-    font-size: 1.4em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    color: #fff;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
-}
-.value {
-    font-size: 2.5em;
-    font-weight: bold;
-    margin-top: 10px;
-    color: #00ffcc;
-    text-shadow: 0 0 10px rgba(0,255,204,0.7);
-    transition: all 0.5s ease;
-}
-.pump-on { color: #00ff00; text-shadow: 0 0 15px rgba(0,255,0,0.7); }
-.pump-off { color: #ff1744; text-shadow: 0 0 15px rgba(255,23,68,0.7); }
-.gauge {
-    width: 100%;
-    height: 15px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 10px;
-}
-.gauge-fill {
-    height: 100%;
-    width: 0%;
-    background: #00ffcc;
-    border-radius: 10px;
-    transition: width 0.5s ease;
-}
-footer {
-    margin-top: 40px;
-    padding: 20px;
-    background: linear-gradient(90deg, #ff8a00, #e52e71);
-    color: white;
-    font-size: 1em;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
-}
-</style>
 </head>
 <body>
-<header>🌱 Smart Environment Dashboard</header>
+<header>Smart Environment Dashboard</header>
 
 <div class="container">
     <div class="card">
@@ -96,43 +17,27 @@ footer {
         <div id="ldr" class="value">--</div>
         <div class="gauge"><div id="ldr-gauge" class="gauge-fill"></div></div>
     </div>
+
     <div class="card">
         <h2><i class="fas fa-thermometer-half"></i> Temperature</h2>
         <div id="temp" class="value">-- °C</div>
         <div class="gauge"><div id="temp-gauge" class="gauge-fill"></div></div>
     </div>
+
     <div class="card">
         <h2><i class="fas fa-tint"></i> Humidity</h2>
         <div id="humidity" class="value">-- %</div>
         <div class="gauge"><div id="humidity-gauge" class="gauge-fill"></div></div>
     </div>
+
+    <div class="card">
+        <h2><i class="fas fa-wind"></i> MQ-2 Gas Sensor</h2>
+        <div id="mq2" class="value">--</div>
+        <div id="mq2v" class="voltage">-- V</div>
+        <div class="gauge"><div id="mq2-gauge" class="gauge-fill"></div></div>
+    </div>
 </div>
 
-<footer>Smart Plant IoT Project 🚀 | Raspberry Pi + Flask</footer>
-
-<script>
-async function updateData() {
-    const response = await fetch('/data');
-    const data = await response.json();
-
-    // Update numbers
-    document.getElementById('ldr').innerText = data.ldr;
-    document.getElementById('temp').innerText = data.temperature + " °C";
-    document.getElementById('humidity').innerText = data.humidity + " %";
-
-    // Update pump
-    const pumpEl = document.getElementById('pump');
-    pumpEl.innerText = data.pump;
-    pumpEl.className = "value " + (data.pump === "ON" ? "pump-on" : "pump-off");
-
-    // Update gauges
-    document.getElementById('ldr-gauge').style.width = (data.ldr / 1023 * 100) + '%';
-    document.getElementById('temp-gauge').style.width = (data.temperature !== "--" ? (data.temperature / 50 * 100) : 0) + '%';
-    document.getElementById('humidity-gauge').style.width = (data.humidity !== "--" ? data.humidity : 0) + '%';
-}
-
-setInterval(updateData, 2000);
-updateData();
-</script>
+<footer>Smart Environment Monitor IoT Project 🚀 | Raspberry Pi + Flask</footer>
 </body>
 </html>

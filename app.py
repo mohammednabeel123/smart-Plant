@@ -1,4 +1,5 @@
-print("welcome to  Smart Plant")
+print("Welcome to Smart Plant")
+
 from flask import Flask, jsonify
 import spidev
 import time
@@ -7,17 +8,16 @@ from threading import Thread
 import adafruit_dht
 import board
 
+app = Flask(__name__, static_folder="static")
 
-app = Flask(__name__)
-
-
+# LEDs
 LED1 = LED(2)
 LED2 = LED(3)
 leds = [LED1, LED2]
 for l in leds:
     l.off()
 
-
+# SPI setup
 spi = spidev.SpiDev()
 spi.open(0, 0)
 spi.max_speed_hz = 1350000
@@ -30,28 +30,34 @@ def read_channel(channel):
 def convert_to_voltage(data, vref=3.3):
     return (data * vref) / 1023
 
-
+# DHT22
 dht_sensor = adafruit_dht.DHT22(board.D4)
 
-
+# Shared sensor data
 sensor_data = {
     "ldr": 0,
-    "voltage": 0,
-    "temperature": 0,
-    "humidity": 0,
+    "ldr_voltage": 0,
+    "mq2": 0,
+    "mq2_voltage": 0,
+    "temperature": "--",
+    "humidity": "--",
     "pump": "OFF"
 }
-
 
 def read_sensors():
     while True:
         try:
-            # LDR
+            # LDR on CH0
             ldr_value = read_channel(0)
             sensor_data["ldr"] = ldr_value
-            sensor_data["voltage"] = round(convert_to_voltage(ldr_value), 2)
+            sensor_data["ldr_voltage"] = round(convert_to_voltage(ldr_value), 2)
 
-            # LEDs control based on light
+            # MQ-2 on CH1
+            mq2_value = read_channel(1)
+            sensor_data["mq2"] = mq2_value
+            sensor_data["mq2_voltage"] = round(convert_to_voltage(mq2_value), 2)
+
+            # LEDs toggle based on light
             if ldr_value > 550:
                 LED1.on()
                 LED2.off()
@@ -62,28 +68,26 @@ def read_sensors():
             # DHT22
             temperature = dht_sensor.temperature
             humidity = dht_sensor.humidity
-            sensor_data["temperature"] = round(temperature, 1) if temperature is not None else "--"
-            sensor_data["humidity"] = round(humidity, 1) if humidity is not None else "--"
+            sensor_data["temperature"] = round(temperature, 1) if temperature else "--"
+            sensor_data["humidity"] = round(humidity, 1) if humidity else "--"
 
-            # Pump status example
+            # Example pump logic
             sensor_data["pump"] = "ON" if ldr_value < 400 else "OFF"
 
-        except RuntimeError as e:
+        except RuntimeError:
             sensor_data["temperature"] = "--"
             sensor_data["humidity"] = "--"
             sensor_data["pump"] = "OFF"
 
         time.sleep(1)
 
-
 @app.route("/")
 def index():
-    return app.send_static_file("index.html")  # Make sure index.html is in 'static/'
+    return app.send_static_file("index.html")
 
 @app.route("/data")
 def get_data():
     return jsonify(sensor_data)
-
 
 if __name__ == "__main__":
     Thread(target=read_sensors, daemon=True).start()
