@@ -4,19 +4,18 @@ from flask import Flask, jsonify
 import adafruit_dht
 import board
 
-
 app = Flask(__name__)
 
 # Initialize DHT22 once
 dht_sensor = adafruit_dht.DHT22(board.D4)
 
 # Simulated values for LDR and pump (replace with real sensor readings later)
-ldr_value = 450        # Example light level
+ldr_value = 450        # Example light level (0–1023)
 pump_status = "OFF"    # Example pump status
 
 @app.route("/")
 def index():
-    return app.send_static_file("index.html")  # Make sure your HTML file is in 'static' folder
+    return app.send_static_file("index.html")  # Place this file in 'static/' folder
 
 @app.route("/data")
 def get_sensor_data():
@@ -24,7 +23,6 @@ def get_sensor_data():
         temperature = dht_sensor.temperature
         humidity = dht_sensor.humidity
 
-        # Return JSON for your dashboard
         return jsonify({
             "ldr": ldr_value,
             "temperature": round(temperature, 1) if temperature is not None else "--",
