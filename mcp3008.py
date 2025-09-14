@@ -1,9 +1,11 @@
-print("Analog to Digital convertor")
-
+from flask import Flask, jsonify
 import spidev
 import time
 from gpiozero import LED
-from flask import Flask, jsonify
+from threading import Thread
+
+# Setup Flask
+app = Flask(__name__)
 
 # Setup LEDs
 LED1 = LED(2)
@@ -14,42 +16,52 @@ for l in leds:
 
 # Setup SPI
 spi = spidev.SpiDev()
-spi.open(0, 0)               # bus 0, device 0 (CE0)
-spi.max_speed_hz = 1350000   # from MCP3008 datasheet
+spi.open(0, 0)
+spi.max_speed_hz = 1350000
 
-# Read channel (0–7)
+# Shared sensor data
+sensor_data = {"ldr": 0, "voltage": 0}
+
+# Read channel
 def channel_readings(channel):
-    adc = spi.xfer2([1, (8 + channel) << 4, 0])  # 3-byte transfer
-    print(adc)                                   # raw bytes
-    data = ((adc[1] & 3) << 8) + adc[2]          # 10-bit value (0–1023)
-    print(data)
+    adc = spi.xfer2([1, (8 + channel) << 4, 0])
+    data = ((adc[1] & 3) << 8) + adc[2]
     return data
 
-# Convert ADC to voltage
+# Convert to voltage
 def convert_to_voltage(data, vref=3.3):
-    voltage = (data * vref) / 1023
-    return voltage
+    return (data * vref) / 1023
 
-try:
-    print("Reading LDR on CH0...")
+# Background thread to read sensors
+def read_sensors():
     while True:
-        ldr_value = channel_readings(0)             # digital 0–1023
-        ldr_voltage = convert_to_voltage(ldr_value) # in volts
+        ldr_value = channel_readings(0)
+        ldr_voltage = convert_to_voltage(ldr_value)
 
-        # Control LEDs based on brightness
-        if ldr_value > 550:      # threshold chosen in digital counts
+        # Update global data
+        sensor_data["ldr"] = ldr_value
+        sensor_data["voltage"] = round(ldr_voltage, 2)
+
+        # Control LEDs
+        if ldr_value > 550:
             LED1.on()
             LED2.off()
-        elif ldr_value < 550:
+        else:
             LED1.off()
             LED2.on()
-        else:  # exactly 550
-            LED1.on()
-            LED2.off()
 
-        print(f"LDR digital: {ldr_value}, Voltage: {ldr_voltage:.2f} V")
         time.sleep(1)
 
-except KeyboardInterrupt:
-    spi.close()
-    print("\nProgram stopped")
+# Flask route to provide JSON data
+@app.route("/data")
+def get_data():
+    return jsonify(sensor_data)
+
+@app.route("/")
+def index():
+    return app.send_static_file("index.html")  # put your HTML in 'static' folder
+
+if __name__ == "__main__":
+    # Start sensor reading in a separate thread
+    Thread(target=read_sensors, daemon=True).start()
+    app.run(host="0.0.0.0", port=5000, debug=False)

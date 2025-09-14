@@ -100,7 +100,7 @@ async function updateData() {
     const response = await fetch('/data');
     const data = await response.json();
 
-    document.getElementById('ldr').innerText = data.ldr;
+document.getElementById('ldr-bar').style.width = (data.ldr / 1023 * 100) + '%';
     document.getElementById('temp').innerText = data.temperature + " °C";
     document.getElementById('humidity').innerText = data.humidity + " %";
 
