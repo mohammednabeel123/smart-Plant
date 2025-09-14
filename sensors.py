@@ -1,43 +1,21 @@
-print("I'm the sensors")
+import spidev
+import time
+ 
+spi = spidev.SpiDev()
+spi.open(0,0)
 
-from flask import Flask, jsonify
-import adafruit_dht
-import board
+def read_channel(channel):
+    #MCP3008 expects 3 bytes eg [start, diff+channel + 0 ]
+    adc = spi.xfer2([1,(8 + channel) << 4, 0])
+    data = ((adc[1] & 3 ) << 8) + adc[2]
+    return data
 
-app = Flask(__name__)
-
-# Initialize DHT22 once
-dht_sensor = adafruit_dht.DHT22(board.D4)
-
-# Simulated values for LDR and pump (replace with real sensor readings later)
-ldr_value = 450        # Example light level (0–1023)
-pump_status = "OFF"    # Example pump status
-
-@app.route("/")
-def index():
-    return app.send_static_file("index.html")  # Place this file in 'static/' folder
-
-@app.route("/data")
-def get_sensor_data():
-    try:
-        temperature = dht_sensor.temperature
-        humidity = dht_sensor.humidity
-
-        return jsonify({
-            "ldr": ldr_value,
-            "temperature": round(temperature, 1) if temperature is not None else "--",
-            "humidity": round(humidity, 1) if humidity is not None else "--",
-            "pump": pump_status
-        })
-
-    except RuntimeError as e:
-        return jsonify({
-            "ldr": ldr_value,
-            "temperature": "--",
-            "humidity": "--",
-            "pump": pump_status,
-            "error": str(e)
-        })
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+try:
+    while True:
+        value = read_channel(1)
+        voltage = (value / 1023.0) * 3.3
+        print(f"MQ-2 Voltage: {voltage:.2f} v")
+        time.sleep(0.5)
+finally:
+    spi.close()
+    

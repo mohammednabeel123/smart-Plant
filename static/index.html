@@ -106,10 +106,6 @@ footer {
         <div id="humidity" class="value">-- %</div>
         <div class="gauge"><div id="humidity-gauge" class="gauge-fill"></div></div>
     </div>
-    <div class="card">
-        <h2><i class="fas fa-water"></i> Pump Status</h2>
-        <div id="pump" class="value pump-off">--</div>
-    </div>
 </div>
 
 <footer>Smart Plant IoT Project 🚀 | Raspberry Pi + Flask</footer>
@@ -129,10 +125,10 @@ async function updateData() {
     pumpEl.innerText = data.pump;
     pumpEl.className = "value " + (data.pump === "ON" ? "pump-on" : "pump-off");
 
-    // Update gauges (normalized)
+    // Update gauges
     document.getElementById('ldr-gauge').style.width = (data.ldr / 1023 * 100) + '%';
-    document.getElementById('temp-gauge').style.width = (data.temperature ? (data.temperature / 50 * 100) : 0) + '%';
-    document.getElementById('humidity-gauge').style.width = (data.humidity ? data.humidity : 0) + '%';
+    document.getElementById('temp-gauge').style.width = (data.temperature !== "--" ? (data.temperature / 50 * 100) : 0) + '%';
+    document.getElementById('humidity-gauge').style.width = (data.humidity !== "--" ? data.humidity : 0) + '%';
 }
 
 setInterval(updateData, 2000);
