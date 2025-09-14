@@ -2,7 +2,7 @@ import spidev
 import time
  
 spi = spidev.SpiDev()
-spi.open(0,0)
+spi.open(0,1)   
 
 def read_channel(channel):
     #MCP3008 expects 3 bytes eg [start, diff+channel + 0 ]
@@ -18,4 +18,3 @@ try:
         time.sleep(0.5)
 finally:
     spi.close()
-    
