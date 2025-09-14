@@ -1,3 +1,19 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("theme-toggle");
+
+    toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("light-mode");
+
+        if (document.body.classList.contains("light-mode")) {
+            toggleBtn.classList.remove("fa-moon");
+            toggleBtn.classList.add("fa-sun");
+        } else {
+            toggleBtn.classList.remove("fa-sun");
+            toggleBtn.classList.add("fa-moon");
+        }
+    });
+});
+
 async function updateData() {
     const response = await fetch('/data');
     const data = await response.json();
@@ -20,3 +36,5 @@ async function updateData() {
 
 setInterval(updateData, 2000);
 updateData();
+
+
