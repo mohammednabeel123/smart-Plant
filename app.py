@@ -38,7 +38,6 @@ draw = ImageDraw.Draw(image)
 font = ImageFont.load_default()
 
 # Draw text
-draw.text((0, 0), "Hello OLED!", font=font, fill=255)
 draw.text((0, 20), "Smart Env Monitor", font=font, fill=255)
 
 # Display image on OLED
@@ -104,6 +103,20 @@ def read_sensors():
             # Example pump logic
             sensor_data["pump"] = "ON" if ldr_value < 400 else "OFF"
 
+            # --- Update OLED here ---
+            image = Image.new("1", (oled.width, oled.height))
+            draw = ImageDraw.Draw(image)
+
+            draw.text((0, 0), "Smart Env Monitor", font=font, fill=255)
+            draw.text((0, 16), f"LDR: {sensor_data['ldr']}", font=font, fill=255)
+            draw.text((0, 26), f"MQ2: {sensor_data['mq2']}", font=font, fill=255)
+            draw.text((0, 36), f"T: {sensor_data['temperature']}C", font=font, fill=255)
+            draw.text((0, 46), f"H: {sensor_data['humidity']}%", font=font, fill=255)
+            draw.text((0, 56), f"Pump: {sensor_data['pump']}", font=font, fill=255)
+
+            oled.image(image)
+            oled.show()
+            
         except RuntimeError:
             sensor_data["temperature"] = "--"
             sensor_data["humidity"] = "--"
