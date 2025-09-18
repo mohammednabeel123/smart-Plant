@@ -11,8 +11,8 @@ import board
 app = Flask(__name__, static_folder="static")
 
 # LEDs
-LED1 = LED(2)
-LED2 = LED(3)
+LED1 = LED(14)
+LED2 = LED(15)
 leds = [LED1, LED2]
 for l in leds:
     l.off()
@@ -31,7 +31,7 @@ def convert_to_voltage(data, vref=3.3):
     return (data * vref) / 1023
 
 # DHT22
-dht_sensor = adafruit_dht.DHT22(board.D4)
+dht_sensor = adafruit_dht.DHT22(board.D17)
 
 # Shared sensor data
 sensor_data = {
