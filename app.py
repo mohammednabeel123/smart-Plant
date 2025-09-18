@@ -7,6 +7,8 @@ from gpiozero import LED
 from threading import Thread
 import adafruit_dht
 import board
+import busio
+import adafruit_ssd1306
 
 app = Flask(__name__, static_folder="static")
 
@@ -16,6 +18,20 @@ LED2 = LED(15)
 leds = [LED1, LED2]
 for l in leds:
     l.off()
+
+# I2C setup
+i2c = busio.I2C(board.SCL, board.SDA)
+
+# OLED setup
+oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
+
+# Clear screen
+oled.fill(0)
+oled.show()
+
+# Display text
+oled.text("Hello OLED!", 0, 0, 1)
+oled.show()
 
 # SPI setup
 spi = spidev.SpiDev()
