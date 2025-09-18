@@ -1,89 +1,97 @@
-# Smart Plant 🌱
+Smart Environment Monitor 🌱💡
 
-**Smart Plant** is a full-stack IoT project designed to monitor and automate the care of your plants. Using sensors and actuators connected to a Raspberry Pi, it provides real-time monitoring of soil moisture, ambient light, and environmental conditions, and automatically waters the plant or triggers alerts when needed.
+Smart Environment Monitor is a full-stack IoT project designed to track and control environmental conditions using a Raspberry Pi. It collects real-time data from various sensors, displays it locally on an OLED, and can trigger actuators like pumps or fans automatically.
 
----
+This project demonstrates practical embedded systems, IoT, SPI communication, and full-stack integration.
 
-## **Features**
+Project Overview
 
-* **Soil Moisture Monitoring:** Tracks soil moisture levels using a sensor and logs readings.
-* **Automated Watering:** Activates a small pump to water the plant when soil is dry.
-* **Light Monitoring:** Uses an LDR to detect ambient light.
-* **Fan Control:** Turns on a fan when environmental conditions require it.
-* **Motion Detection:** Stops watering or activates safety protocols if motion is detected via a PIR sensor.
-* **Modular Code:** Sensors, actuators, and configuration separated into multiple Python files for easy maintenance.
-* **Full Stack Ready:** Designed to connect with web dashboards or cloud platforms in future expansions.
+Monitoring the environment is important for plants, rooms, or labs. This project uses sensors to measure:
 
----
+Light (LDR)
 
-## **Hardware Components**
+Air quality (MQ-2 gas sensor)
 
-* Raspberry Pi 3B+
-* MCP3008 ADC
-* Soil Moisture Sensor
-* LDR (Light Dependent Resistor)
-* Small Water Pump (6V, 120L/H)
-* Fan
-* PIR Motion Sensor (HC-SR501)
+Temperature and humidity (DHT22)
 
----
+Based on these readings, the system can automate actions like turning on a pump or fan and display live readings on an OLED screen.
 
-## **Software Components**
+#How It Works
 
-* Python 3
-* Libraries: `RPi.GPIO`, `spidev` (for MCP3008), others as needed
-* VS Code (with Remote-SSH for Raspberry Pi development)
+Reading Analog Sensors with MCP3008 (SPI):
 
----
+Sensors like the LDR and MQ-2 gas sensor produce analog voltages.
 
-## **Project Structure**
+Raspberry Pi cannot read analog signals directly, so we use the MCP3008 ADC to convert analog signals to digital.
 
-```
-smart-Plant/
-│
-├── main.py            # Main program
-├── sensors.py         # Sensor reading functions
-├── actuators.py       # Actuator control functions
-├── mcp3008.py         # ADC interfacing
-├── config.py          # Configuration for pins and thresholds
-└── README.md          # Project description
-```
+Communication happens over SPI (Serial Peripheral Interface) — imagine the Pi asking, “What’s the sensor value?” and the ADC replying with a number.
 
----
+Temperature & Humidity (DHT22):
 
-## **Setup Instructions**
+The DHT22 provides digital readings for temperature and humidity.
 
-1. **Clone the repository:**
+Python reads these values directly and updates the display and actuator logic.
 
-```bash
-git clone https://github.com/mohammednabeel123/smart-Plant.git
-cd smart-Plant
-```
 
-2. **Install dependencies on Raspberry Pi:**
 
-```bash
+OLED Display (I²C):
+
+A small 128×64 OLED display shows live readings like light, gas, temperature, humidity, and pump status.
+
+Using I²C communication, the Pi sends the data to the OLED screen so you can see sensor updates in real time.
+
+Web Dashboard (Future Expansion):
+
+Flask API already serves the sensor data at /data for remote monitoring.
+
+You can connect this to a web dashboard or mobile app to view readings from anywhere.
+
+#Hardware Components
+
+Raspberry Pi 3B+
+
+MCP3008 ADC
+
+LDR (Light Dependent Resistor)
+
+MQ-2 Gas Sensor
+
+DHT22 Temperature & Humidity Sensor
+
+
+LEDs for status indicators
+
+OLED Display (128×64, I²C)
+
+#Software Components
+
+Python 3
+
+Libraries: RPi.GPIO, spidev, adafruit_dht, adafruit_ssd1306, Pillow
+
+Flask (for web API and future dashboard)
+
+
+Setup Instructions
+
+Clone the repository:
+
+git clone https://github.com/mohammednabeel123/smart environment Monitor.git
+cd smart environment Monitor
+
+
+Install dependencies on Raspberry Pi:
+
 sudo apt update
 sudo apt install python3 python3-pip -y
-pip3 install RPi.GPIO spidev
-```
+pip3 install RPi.GPIO spidev adafruit-circuitpython-dht adafruit-circuitpython-ssd1306 Pillow flask
 
-3. **Run the project:**
 
-```bash
-python3 main.py
-```
+Run the project:
 
-4. **Connect via VS Code (optional):** Use the Remote-SSH extension to edit and run code directly on the Pi.
+python3 app.py
 
----
 
-## **Future Improvements**
+Optional: Use VS Code Remote-SSH to edit and run code directly on the Pi.
 
-* Add web dashboard for real-time monitoring
-* Multilingual support for global use
-* Integration with AI for plant care recommendations
-* Logging data to cloud for analytics
-
----
-
+Future Improvements
