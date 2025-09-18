@@ -21,6 +21,14 @@ for l in leds:
     l.off()
 
 
+i2c = busio.I2C(board.SCL, board.SDA)
+
+# --- OLED setup (128x64) ---
+oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
+
+# Clear display
+oled.fill(0)
+oled.show()
 
 # Make blank image for drawing
 image = Image.new("1", (oled.width, oled.height))
@@ -31,10 +39,12 @@ font = ImageFont.load_default()
 
 # Draw text
 draw.text((0, 0), "Hello OLED!", font=font, fill=255)
+draw.text((0, 20), "Smart Env Monitor", font=font, fill=255)
 
-# Display image
+# Display image on OLED
 oled.image(image)
 oled.show()
+
 
 
 # SPI setup
