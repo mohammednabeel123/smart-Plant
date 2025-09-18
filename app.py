@@ -8,6 +8,7 @@ from threading import Thread
 import adafruit_dht
 import board
 import busio
+from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
 
 app = Flask(__name__, static_folder="static")
@@ -19,19 +20,22 @@ leds = [LED1, LED2]
 for l in leds:
     l.off()
 
-# I2C setup
-i2c = busio.I2C(board.SCL, board.SDA)
 
-# OLED setup
-oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
-# Clear screen
-oled.fill(0)
+# Make blank image for drawing
+image = Image.new("1", (oled.width, oled.height))
+draw = ImageDraw.Draw(image)
+
+# Load default font
+font = ImageFont.load_default()
+
+# Draw text
+draw.text((0, 0), "Hello OLED!", font=font, fill=255)
+
+# Display image
+oled.image(image)
 oled.show()
 
-# Display text
-oled.text("Hello OLED!", 0, 0, 1)
-oled.show()
 
 # SPI setup
 spi = spidev.SpiDev()
